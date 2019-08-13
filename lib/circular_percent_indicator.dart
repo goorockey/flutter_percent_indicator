@@ -69,6 +69,8 @@ class CircularPercentIndicator extends StatefulWidget {
   /// Creates a mask filter that takes the progress shape being drawn and blurs it.
   final MaskFilter maskFilter;
 
+  final bool animateForwardOnly;
+
   CircularPercentIndicator(
       {Key key,
       this.percent = 0.0,
@@ -89,6 +91,7 @@ class CircularPercentIndicator extends StatefulWidget {
       this.arcBackgroundColor,
       this.arcType,
       this.animateFromLastPercent = false,
+      this.animateForwardOnly = false,
       this.reverse = false,
       this.maskFilter})
       : super(key: key) {
@@ -152,7 +155,9 @@ class _CircularPercentIndicatorState extends State<CircularPercentIndicator>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.percent != widget.percent ||
         oldWidget.startAngle != widget.startAngle) {
-      if (_animationController != null) {
+      if (_animationController != null &&
+          (widget.animateForwardOnly != true ||
+              oldWidget.percent < widget.percent)) {
         _animationController.duration =
             Duration(milliseconds: widget.animationDuration);
         _animation = Tween(
